@@ -13,10 +13,10 @@ public class Student {
 	private Long id;
 
 	private String name;
-	private int grade;
-	private double gpa;
+	private Integer grade;
+	private Double gpa;
 	
-	public Student(String name, Long id, int grade, double gpa) {
+	public Student(String name, Long id, Integer grade, Double gpa) {
 		super();
 		this.setName(name);
 		this.setId(id);
@@ -43,13 +43,13 @@ public class Student {
 	public int getGrade() {
 		return grade;
 	}
-	public void setGrade(int grade) {
+	public void setGrade(Integer grade) {
 		this.grade = grade;
 	}
 	public double getGpa() {
 		return gpa;
 	}
-	public void setGpa(double gpa) {
+	public void setGpa(Double gpa) {
 		this.gpa = gpa;
 	}
 	

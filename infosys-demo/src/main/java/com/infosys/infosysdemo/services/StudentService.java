@@ -41,7 +41,6 @@ public class StudentService {
 	public Student editStudent(Long id, Student newStudent) {
 		Student existing = this.getOneStudent(id);
 		
-		existing.setId(newStudent.getId());
 		existing.setName(newStudent.getName());
 		existing.setGrade(newStudent.getGrade());
 		existing.setGpa(newStudent.getGpa());

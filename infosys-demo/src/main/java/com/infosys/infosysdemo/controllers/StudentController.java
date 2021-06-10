@@ -49,16 +49,21 @@ public class StudentController {
 	}
 	
 	@PatchMapping("patchStudent/{id}")
-	public ResponseEntity<Student> patchStudent(@PathVariable Long id, @PathParam("name") String newName, @PathParam("id") Long newId, @PathParam("grade") int newGrade, @PathParam("gpa") double newGpa) {
+	public ResponseEntity<Student> patchStudent(@PathVariable Long id, @PathParam("name") String newName, @PathParam("grade") Integer newGrade, @PathParam("gpa") Double newGpa) {
 		Student toChange = this.service.getOneStudent(id);
-		
-		newName = newName != null ? newName : toChange.getName();
-		newId = newId != 0 ? newId : toChange.getId();
-		newGrade = newGrade != 0 ? newGrade : toChange.getGrade();
-		newGpa = newGpa != 0.0 ? newGpa : toChange.getGpa();
+
+		if (newName == null) {
+			newName = toChange.getName();
+		} 
+		if (newGrade == null) {
+			newGrade = toChange.getGrade();
+		}
+		if (newGpa == null) {
+			newGpa = toChange.getGpa();
+		}
 		
 		toChange.setName(newName);
-		toChange.setId(newId);
+		toChange.setId(id);
 		toChange.setGrade(newGrade);
 		toChange.setGpa(newGpa);
 		
