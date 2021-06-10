@@ -33,9 +33,9 @@ public class StudentController {
 		return new ResponseEntity<>(this.service.addStudent(s), HttpStatus.CREATED);
 	}
 	
-	@GetMapping("/getOne/{index}")
-	public ResponseEntity<Student> getOneStudent(@PathVariable int index) {
-		return new ResponseEntity<Student>(this.service.getOneStudent(index), HttpStatus.OK);
+	@GetMapping("/getOne/{id}")
+	public ResponseEntity<Student> getOneStudent(@PathVariable Long id) {
+		return new ResponseEntity<Student>(this.service.getOneStudent(id), HttpStatus.OK);
 	}
 	
 	@GetMapping("/getAll")
@@ -43,14 +43,14 @@ public class StudentController {
 		return new ResponseEntity<List<Student>>(this.service.getAllStudents(), HttpStatus.OK);
 	}
 	
-	@PutMapping("updateStudent/{index}")
-	public ResponseEntity editStudent(@PathVariable int index, @RequestBody Student s) {
-		return new ResponseEntity(this.service.editStudent(index, s), HttpStatus.ACCEPTED);
+	@PutMapping("updateStudent/{id}")
+	public ResponseEntity editStudent(@PathVariable Long id, @RequestBody Student s) {
+		return new ResponseEntity(this.service.editStudent(id, s), HttpStatus.ACCEPTED);
 	}
 	
-	@PatchMapping("patchStudent/{index}")
-	public ResponseEntity<Student> patchStudent(@PathVariable int index, @PathParam("name") String newName, @PathParam("id") int newId, @PathParam("grade") int newGrade, @PathParam("gpa") double newGpa) {
-		Student toChange = this.service.getOneStudent(index);
+	@PatchMapping("patchStudent/{id}")
+	public ResponseEntity<Student> patchStudent(@PathVariable Long id, @PathParam("name") String newName, @PathParam("id") Long newId, @PathParam("grade") int newGrade, @PathParam("gpa") double newGpa) {
+		Student toChange = this.service.getOneStudent(id);
 		
 		newName = newName != null ? newName : toChange.getName();
 		newId = newId != 0 ? newId : toChange.getId();
@@ -63,14 +63,14 @@ public class StudentController {
 		toChange.setGpa(newGpa);
 		
 		
-		return new ResponseEntity<Student>(this.service.editStudent(index, toChange), HttpStatus.ACCEPTED);
+		return new ResponseEntity<Student>(this.service.editStudent(id, toChange), HttpStatus.ACCEPTED);
 		
 	}
 	
 	@DeleteMapping("deleteStudent/{index}")
-	public ResponseEntity deleteStudent(@PathVariable int index) {
-		Student toReturn = this.service.getOneStudent(index);
-		return new ResponseEntity(this.service.deleteStudent(index), HttpStatus.ACCEPTED);
+	public ResponseEntity deleteStudent(@PathVariable Long id) {
+		Student toReturn = this.service.getOneStudent(id);
+		return new ResponseEntity(this.service.deleteStudent(id), HttpStatus.ACCEPTED);
 	}
 	
 }
