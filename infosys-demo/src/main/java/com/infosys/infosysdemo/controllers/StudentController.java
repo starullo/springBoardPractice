@@ -1,6 +1,6 @@
 package com.infosys.infosysdemo.controllers;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import javax.websocket.server.PathParam;
 
@@ -16,38 +16,41 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.infosys.infosysdemo.entities.Student;
+import com.infosys.infosysdemo.services.StudentService;
 
 
 @RestController
 public class StudentController {
 	
-	private ArrayList<Student> students = new ArrayList<Student>();
+	private StudentService service;
 	
-	@PostMapping("/create")
+	public StudentController(StudentService s) {
+		this.service = s;
+	}
+	
+	@PostMapping("/add")
 	public ResponseEntity addStudent(@RequestBody Student s) {
-		this.students.add(s);
-		return new ResponseEntity<>(HttpStatus.CREATED);
+		return new ResponseEntity<>(this.service.addStudent(s), HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/getOne/{index}")
 	public ResponseEntity<Student> getOneStudent(@PathVariable int index) {
-		return new ResponseEntity<Student>(students.get(index), HttpStatus.OK);
+		return new ResponseEntity<Student>(this.service.getOneStudent(index), HttpStatus.OK);
 	}
 	
 	@GetMapping("/getAll")
-	public ResponseEntity<ArrayList<Student>> getAllStudents() {
-		return new ResponseEntity<ArrayList<Student>>(this.students, HttpStatus.OK);
+	public ResponseEntity<List<Student>> getAllStudents() {
+		return new ResponseEntity<List<Student>>(this.service.getAllStudents(), HttpStatus.OK);
 	}
 	
 	@PutMapping("updateStudent/{index}")
 	public ResponseEntity editStudent(@PathVariable int index, @RequestBody Student s) {
-		this.students.set(index, s);
-		return new ResponseEntity(HttpStatus.ACCEPTED);
+		return new ResponseEntity(this.service.editStudent(index, s), HttpStatus.ACCEPTED);
 	}
 	
 	@PatchMapping("patchStudent/{index}")
 	public ResponseEntity<Student> patchStudent(@PathVariable int index, @PathParam("name") String newName, @PathParam("id") int newId, @PathParam("grade") int newGrade, @PathParam("gpa") double newGpa) {
-		Student toChange = this.students.get(index);
+		Student toChange = this.service.getOneStudent(index);
 		
 		newName = newName != null ? newName : toChange.getName();
 		newId = newId != 0 ? newId : toChange.getId();
@@ -59,17 +62,15 @@ public class StudentController {
 		toChange.setGrade(newGrade);
 		toChange.setGpa(newGpa);
 		
-		this.students.set(index, toChange);
 		
-		return new ResponseEntity<Student>(toChange, HttpStatus.ACCEPTED);
+		return new ResponseEntity<Student>(this.service.editStudent(index, toChange), HttpStatus.ACCEPTED);
 		
 	}
 	
 	@DeleteMapping("deleteStudent/{index}")
 	public ResponseEntity deleteStudent(@PathVariable int index) {
-		Student toReturn = this.students.get(index);
-		this.students.remove(index);
-		return new ResponseEntity(HttpStatus.ACCEPTED);
+		Student toReturn = this.service.getOneStudent(index);
+		return new ResponseEntity(this.service.deleteStudent(index), HttpStatus.ACCEPTED);
 	}
 	
 }
