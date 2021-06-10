@@ -1,14 +1,23 @@
 package com.infosys.infosysdemo.entities;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 
+@Entity
 public class Student {
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
 	private String name;
-	private int id;
 	private int grade;
 	private double gpa;
 	
-	public Student(String name, int id, int grade, double gpa) {
+	public Student(String name, Long id, int grade, double gpa) {
+		super();
 		this.setName(name);
 		this.setId(id);
 		this.setGrade(grade);
@@ -16,10 +25,7 @@ public class Student {
 	}
 	
 	public Student() {
-		this.setName("???");
-		this.setId(-1);
-		this.setGrade(-1);
-		this.setGpa(-1);
+		
 	}
 	
 	public String getName() {
@@ -28,10 +34,10 @@ public class Student {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 	public int getGrade() {
