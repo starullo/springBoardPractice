@@ -1,69 +1,78 @@
 package com.infosys.infosysdemo.services;
 
 
-import javax.websocket.server.PathParam;
+
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.infosys.infosysdemo.entities.Student;
+import com.infosys.infosysdemo.repo.StudentRepo;
+
+
+
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class StudentService {
 	
-	private List<Student> students;
+	private StudentRepo repo;
 	
-	public StudentService(List<Student> s) {
-		this.students = s;
+	public StudentService(StudentRepo sr) {
+		this.repo = sr;
 	}
 	
-	public Student addStudent(@RequestBody Student s) {
-		this.students.add(s);
+	
+	public Student addStudent(Student s) {
+		this.repo.save(s);
 		return s;
 	}
 	
-	public Student getOneStudent(@PathVariable int index) {
-		return students.get(index);
+	public Student getOneStudent(Long id) {
+		
+		Optional<Student> c = this.repo.findById(id);
+		return c.get(); 
 	}
 	
 	public List<Student> getAllStudents() {
-		return this.students;
+		return this.repo.findAll();
 	}
 	
-	public Student editStudent(@PathVariable int index, @RequestBody Student s) {
-		this.students.set(index, s);
-		return s;
-	}
-	
-	public Student patchStudent(@PathVariable int index, @PathParam("name") String newName, @PathParam("id") int newId, @PathParam("grade") int newGrade, @PathParam("gpa") double newGpa) {
-		Student toChange = this.students.get(index);
+	public Student editStudent(Long id, Student newStudent) {
+		Student existing = this.getOneStudent(id);
 		
-		newName = newName != null ? newName : toChange.getName();
-		newId = newId != 0 ? newId : toChange.getId();
-		newGrade = newGrade != 0 ? newGrade : toChange.getGrade();
-		newGpa = newGpa != 0.0 ? newGpa : toChange.getGpa();
+		existing.setId(id);
+		existing.setName(newStudent.getName());
+		existing.setGrade(newStudent.getGrade());
+		existing.setGpa(newStudent.getGpa());
+		
+		Student updated = this.repo.save(existing);
+		
+		return updated;
+	}
+	
+	public Student patchStudent(Long id, Student newStudent) {
+		Student toChange = this.repo.getById(id);
+		
+		String newName = newStudent.getName() != null ? newStudent.getName() : toChange.getName();
+		Long newId = newStudent.getId() != null ? newStudent.getId() : toChange.getId();
+		int newGrade = newStudent.getGrade() != 0 ? newStudent.getGrade() : toChange.getGrade();
+		double newGpa = newStudent.getGpa() != 0.0 ? newStudent.getGpa() : toChange.getGpa();
 		
 		toChange.setName(newName);
 		toChange.setId(newId);
 		toChange.setGrade(newGrade);
 		toChange.setGpa(newGpa);
 		
-		this.students.set(index, toChange);
+		return this.repo.save(toChange);
 		
-		return toChange;
+		
 		
 	}
 	
-	public boolean deleteStudent(@PathVariable int index) {
-		this.students.remove(index);
-		return true;
+	public boolean deleteStudent(Long id) {
+		this.repo.deleteById(id);
+		return this.repo.existsById(id);
 	}
 	
 
