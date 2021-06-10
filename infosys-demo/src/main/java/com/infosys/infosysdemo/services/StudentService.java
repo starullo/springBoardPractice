@@ -41,7 +41,7 @@ public class StudentService {
 	public Student editStudent(Long id, Student newStudent) {
 		Student existing = this.getOneStudent(id);
 		
-		existing.setId(id);
+		existing.setId(newStudent.getId());
 		existing.setName(newStudent.getName());
 		existing.setGrade(newStudent.getGrade());
 		existing.setGpa(newStudent.getGpa());
@@ -51,24 +51,6 @@ public class StudentService {
 		return updated;
 	}
 	
-	public Student patchStudent(Long id, Student newStudent) {
-		Student toChange = this.repo.getById(id);
-		
-		String newName = newStudent.getName() != null ? newStudent.getName() : toChange.getName();
-		Long newId = newStudent.getId() != null ? newStudent.getId() : toChange.getId();
-		int newGrade = newStudent.getGrade() != 0 ? newStudent.getGrade() : toChange.getGrade();
-		double newGpa = newStudent.getGpa() != 0.0 ? newStudent.getGpa() : toChange.getGpa();
-		
-		toChange.setName(newName);
-		toChange.setId(newId);
-		toChange.setGrade(newGrade);
-		toChange.setGpa(newGpa);
-		
-		return this.repo.save(toChange);
-		
-		
-		
-	}
 	
 	public boolean deleteStudent(Long id) {
 		this.repo.deleteById(id);
